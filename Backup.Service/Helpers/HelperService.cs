@@ -89,7 +89,7 @@ namespace Backup.Service.Helpers
                     var cloudBlobContainer = cloudBlobClient.GetContainerReference(schedule);
                     var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
                     await cloudBlockBlob.UploadFromFileAsync(path);
-                    _logger.Info($"{DateTime.Now}: The file is been uplaoded to the blob with {schedule} schedule");
+                    _logger.Info($"{DateTime.Now}: The file is been uploaded to the blob with {schedule} schedule");
                 }
                 else
                 {
@@ -130,7 +130,7 @@ namespace Backup.Service.Helpers
             var config = new NLog.Config.LoggingConfiguration();
 
             // Targets where to log to: File and Console
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "backupclientlogfile.txt" };
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "backupclientlogfile_helperservice.txt" };
             var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
 
             // Rules for mapping loggers to targets            
