@@ -89,7 +89,7 @@ namespace Backup.Service.Helpers
                     var cloudBlobContainer = cloudBlobClient.GetContainerReference(schedule);
                     var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
                     await cloudBlockBlob.UploadFromFileAsync(path);
-                    _logger.Info($"{DateTime.Now}: The file is been uplaoded to the blob with {schedule} schedule");
+                    _logger.Info($"{DateTime.Now}: The file is been uploaded to the blob with {schedule} schedule");
                 }
                 else
                 {
