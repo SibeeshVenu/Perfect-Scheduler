@@ -27,19 +27,48 @@ namespace Backup.Service
                 var scheduler = await GetScheduler();
                 var serviceProvider = GetConfiguredServiceProvider();
                 scheduler.JobFactory = new CustomJobFactory(serviceProvider);
-
                 await scheduler.Start();
-                await scheduler.ScheduleJob(GetDailyJob(), GetDailyJobTrigger());
-                await Task.Delay(1000);
-                await scheduler.ScheduleJob(GetWeeklyJob(), GetWeeklyJobTrigger());
-                await Task.Delay(1000);
-                await scheduler.ScheduleJob(GetMonthlyJob(), GetMonthlyJobTrigger());
-                await Task.Delay(1000);
+                await ConfigureDailyJob(scheduler);
+                await ConfigureWeeklyJob(scheduler);
+                await ConfigureMonthlyJob(scheduler);
             }
             catch (Exception ex)
             {
-                throw new CustomConfigurationException(ex.Message);
+                _logger.Error(new CustomConfigurationException(ex.Message));
             }
+        }
+
+        private async Task ConfigureDailyJob(IScheduler scheduler)
+        {
+            var dailyJob = GetDailyJob();
+            if (await scheduler.CheckExists(dailyJob.Key))
+            {
+                await scheduler.DeleteJob(dailyJob.Key);
+                _logger.Info($"The job key {dailyJob.Key} was already existed, thus deleted the same");
+            }
+            await scheduler.ScheduleJob(dailyJob, GetDailyJobTrigger());
+        }
+
+        private async Task ConfigureWeeklyJob(IScheduler scheduler)
+        {
+            var weklyJob = GetWeeklyJob();
+            if (await scheduler.CheckExists(weklyJob.Key))
+            {
+                await scheduler.DeleteJob(weklyJob.Key);
+                _logger.Info($"The job key {weklyJob.Key} was already existed, thus deleted the same");
+            }
+            await scheduler.ScheduleJob(weklyJob, GetWeeklyJobTrigger());
+        }
+
+        private async Task ConfigureMonthlyJob(IScheduler scheduler)
+        {
+            var monthlyJob = GetMonthlyJob();
+            if (await scheduler.CheckExists(monthlyJob.Key))
+            {
+                await scheduler.DeleteJob(monthlyJob.Key);
+                _logger.Info($"The job key {monthlyJob.Key} was already existed, thus deleted the same");
+            }
+            await scheduler.ScheduleJob(monthlyJob, GetMonthlyJobTrigger());
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
