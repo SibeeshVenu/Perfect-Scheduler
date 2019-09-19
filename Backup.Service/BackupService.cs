@@ -43,10 +43,13 @@ namespace Backup.Service
             var dailyJob = GetDailyJob();
             if (await scheduler.CheckExists(dailyJob.Key))
             {
-                await scheduler.DeleteJob(dailyJob.Key);
-                _logger.Info($"The job key {dailyJob.Key} was already existed, thus deleted the same");
+                await scheduler.ResumeJob(dailyJob.Key);
+                _logger.Info($"The job key {dailyJob.Key} was already existed, thus resuming the same");
             }
-            await scheduler.ScheduleJob(dailyJob, GetDailyJobTrigger());
+            else
+            {
+                await scheduler.ScheduleJob(dailyJob, GetDailyJobTrigger());
+            }
         }
 
         private async Task ConfigureWeeklyJob(IScheduler scheduler)
@@ -54,10 +57,13 @@ namespace Backup.Service
             var weklyJob = GetWeeklyJob();
             if (await scheduler.CheckExists(weklyJob.Key))
             {
-                await scheduler.DeleteJob(weklyJob.Key);
-                _logger.Info($"The job key {weklyJob.Key} was already existed, thus deleted the same");
+                await scheduler.ResumeJob(weklyJob.Key);
+                _logger.Info($"The job key {weklyJob.Key} was already existed, thus resuming the same");
             }
-            await scheduler.ScheduleJob(weklyJob, GetWeeklyJobTrigger());
+            else
+            {
+                await scheduler.ScheduleJob(weklyJob, GetWeeklyJobTrigger());
+            }
         }
 
         private async Task ConfigureMonthlyJob(IScheduler scheduler)
@@ -65,10 +71,13 @@ namespace Backup.Service
             var monthlyJob = GetMonthlyJob();
             if (await scheduler.CheckExists(monthlyJob.Key))
             {
-                await scheduler.DeleteJob(monthlyJob.Key);
-                _logger.Info($"The job key {monthlyJob.Key} was already existed, thus deleted the same");
+                await scheduler.ResumeJob(monthlyJob.Key);
+                _logger.Info($"The job key {monthlyJob.Key} was already existed, thus resuming the same");
             }
-            await scheduler.ScheduleJob(monthlyJob, GetMonthlyJobTrigger());
+            else
+            {
+                await scheduler.ScheduleJob(monthlyJob, GetMonthlyJobTrigger());
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
